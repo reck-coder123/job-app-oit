@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Secular+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600&family=Secular+One&display=swap');
+body{
+    background-color:azure;
+
+}
+*{
+    margin: 2px;
+    padding: 2px;
+    font-family: sans-serif;
+}
+.big{
+    width: 100%;
+    min-height: 100vh;
+    padding-left: 8%;
+    padding-right: 8%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.job{
+    height: 300px;
+    width: 500px;
+    border-radius: 6px;
+}
+.navbar{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.heading{
+    width: 300px;
+    margin-top: 30px;
+    color: rgb(31, 195, 140);
+    font-weight: 100;
+    font-size: 34px;
+    font-family: 'Secular One', sans-serif;
+}
+nav{
+    flex: 1;
+    text-align: right;
+}
+nav ul li{
+    list-style: none;
+    display: inline-block;
+    margin-right: 30px;
+}
+nav ul li a{
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+}
+nav ul li a:hover{
+    color: #ff5ea2;
+}
+.col-1{
+    flex-basis: 40%;
+    position: relative;
+    margin-left: 50px;
+}
+.col-1 h2{
+    font-size: 54px;
+}
+.col-1 h3{
+    font-size: 30px;
+    color:grey;
+    font-weight: 100;
+    margin: 20px 0 10px;
+}
+.sign-in{
+    background-color:rgb(110, 247, 208);
+    width: 280px;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 12px;
+}
+form input{
+    width: 200px;
+    border-radius: 7px;
+}
+.btn{
+    background-color: rgb(188, 239, 69);
+    border-radius: 5px;
+}
+#sub{
+    font-size: 40px;
+    font-weight: 200;
+    font-family: 'Oswald', sans-serif;
+}
+.bottom{
+    text-decoration: none;
+    color: darkgreen;
+    font-family:'Oswald', sans-serif ;
+}
+.sign-up{
+    background-color:rgb(110, 247, 208);
+    width: 330px; 
+    border-radius: 6px;
+    padding: 5px;
+    margin:12px;
+}
+.header{
+    width: 150px;
+    margin-top: 10px;
+    color: rgb(31, 195, 140);
+    font-weight: 100;
+    font-size: 16px;
+    font-family: 'Secular One', sans-serif;
+}
+.bar{
+    text-align: center;
+    margin: -40px 0;
+}
+table td{
+    border: 3px solid rebeccapurple;
+    border-radius: 7px; 
+    padding: 15px;  
+}
+#c3{
+    background-color: #e9f54a;
+    font-family: 'Secular One', sans-serif;
+    font-size: large;
+}
+#c4{
+    background-color: #278bef;
+    font-family: 'Secular One', sans-serif;
+    font-size: large;
+}
+#c1{
+    background-color: #2aedaf;
+    font-family: 'Secular One', sans-serif;
+    font-size: large;
+}
+#c2{
+    background-color:#eaece3 ;
+    font-family: 'Secular One', sans-serif;
+    font-size: large;
+}
+
+.menu-icon{
+    width: 35px;
+    cursor: pointer;
+    float: right;
+    background-color: #2aedaf;
+    visibility: hidden;
+}
+
