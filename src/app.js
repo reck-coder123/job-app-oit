@@ -1,6 +1,7 @@
 const express=require('express');
 const path=require('path');
 const hbs=require('hbs');
+const bcrypt=require('bcryptjs');
 const {Register,Register2} = require('./models/register');
 const app=express();
 const port=process.env.port|| 8000;
@@ -34,7 +35,8 @@ app.post('/loginA', async (req,res)=>{
        const passwordA=req.body.passwordA
        
        const usermail=await Register.findOne({emailA:emailA});
-       if(usermail.passwordA===passwordA){
+       const isMatch= await bcrypt.compare(passwordA,usermail.passwordA);
+       if(isMatch){
         res.status(201).render('indexA')
        }
        else{
