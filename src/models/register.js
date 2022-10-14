@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
 const jwt =require('jsonwebtoken');
+const bcrypt=require('bcryptjs');
 const schema=new mongoose.Schema({
     nameA:{
         type:String,
@@ -50,8 +51,35 @@ const schema2=new mongoose.Schema({
         unique:true
     }
 })
-
+schema.pre("save",async function(next){
+    // 
+    if(this.isModified("passwordA")){
+    this.passwordA= await bcrypt.hash(this.passwordA,10)
+    this.ConfirmpasswordA=undefined;
+}
+    
+    next();
+})
 schema.methods.generateauthToken=async function(){
+    try {
+        const token =jwt.sign({_id:this._id.toString()},"mynameisayushmishramechanicalengineering");
+        console.log(token);
+        return token;
+    } catch (error) {
+        res.send('the error part'+error);
+        console.log('the error part'+error);
+    }
+}
+
+schema2.pre("save",async function(next){
+    if(this.isModified("passwordJ")){
+    this.passwordJ= await bcrypt.hash(this.passwordJ,10)
+    this.ConfirmpasswordJ=undefined;
+}
+    
+    next();
+})
+schema2.methods.generateauthToken=async function(){
     try {
         const token =jwt.sign({_id:this._id.toString()},"mynameisayushmishramechanicalengineering");
         console.log(token);
