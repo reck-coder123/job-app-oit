@@ -9,6 +9,12 @@ body{
     padding: 2px;
     font-family: sans-serif;
 }
+nav ul li a{
+    float: right;
+    font-family: sans-serif;
+    color: black;
+}
+
 .big{
     width: 100%;
     min-height: 100vh;
