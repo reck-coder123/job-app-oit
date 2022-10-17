@@ -2,16 +2,19 @@ const express=require('express');
 const path=require('path');
 const hbs=require('hbs');
 const bcrypt=require('bcryptjs');
+const jwt=require('jsonwebtoken');
+const cookieparser=require('cookie-parser');
 const {Register,Register2} = require('./models/register');
 const app=express();
-const port=process.env.port|| 8000;
+const port=process.env.port|| 5000;
 require('./db/db')
+const auth=require('./middleware/auth');
 
 
 const static_path=path.join(__dirname,'../public/')
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(static_path)) ;
-
+app.use(cookieparser());
 
 
 app.set('view engine','hbs');
@@ -29,6 +32,10 @@ app.get('/loginA',(req,res)=>{
     res.render('loginA');
 })
 
+app.get('/indexA',auth,(req,res)=>{
+    res.render('indexA');
+})
+
 app.post('/loginA', async (req,res)=>{
     try {
        const emailA=req.body.emailA
@@ -36,6 +43,12 @@ app.post('/loginA', async (req,res)=>{
        
        const usermail=await Register.findOne({emailA:emailA});
        const isMatch= await bcrypt.compare(passwordA,usermail.passwordA);
+       const token= await usermail.generateauthToken();
+        res.cookie("jwt",token,{
+            expires:new Date(Date.now()+500000),
+            httpOnly:true
+        })
+        
        if(isMatch){
         res.status(201).render('indexA')
        }
@@ -43,7 +56,7 @@ app.post('/loginA', async (req,res)=>{
         res.send('Invalid account details');
        }
     } catch (error) {
-        res.status(400).send('Invalid account details')
+        res.status(400).send(error)
         
     }
 })
@@ -67,7 +80,11 @@ app.post('/registerA', async (req,res)=>{
                 "the success part"+register
             );
             const token= await register.generateauthToken();
-            console.log("the token part"+token);
+            res.cookie("jwt",token,{
+                expires:new Date(Date.now()+500000),
+                httpOnly:true
+            })
+
             const registered=await register.save();
             res.status(201).render('loginA');
        }
@@ -79,9 +96,33 @@ app.post('/registerA', async (req,res)=>{
     }
 })
 
+app.get('/add_jobs',auth,(req,res)=>{
+    res.render('add_jobs');
+})
+
+app.get('/logout',auth, async(req,res)=>{
+    try {
+
+        req.user.tokens=req.user.tokens.filter((current)=>{
+            return current.token!==req.token;
+        })
+
+        res.clearCookie("jwt");
+        console.log("logout successfully");
+
+        await req.user.save()
+        res.render('loginA');
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
 
 app.get('/loginJ',(req,res)=>{
     res.render('loginJ')
+})
+
+app.get('/indexJ',(req,res)=>{
+    res.render('indexJ');
 })
 
 app.post('/loginJ', async (req,res)=>{
@@ -89,8 +130,15 @@ app.post('/loginJ', async (req,res)=>{
        const emailJ=req.body.emailJ
        const passwordJ=req.body.passwordJ
        
-       const usermail=await Register2.findOne({emailJ:emailJ});
-       if(usermail.passwordJ===passwordJ){
+       const usermailJ=await Register2.findOne({emailJ:emailJ});
+       const isMatch= await bcrypt.compare(passwordJ,usermailJ.passwordJ);
+       const tokenJ= await usermailJ.generateauthTokenJ();
+       res.cookie("jwt",tokenJ,{
+        expires:new Date(Date.now()+500000),
+        httpOnly:true
+    })
+        
+       if(isMatch){
         res.status(201).render('indexJ')
        }
        else{
@@ -118,7 +166,16 @@ app.post('/registerJ', async (req,res)=>{
                 emailJ:req.body.emailJ,
                 ConfirmpasswordJ:req.body.ConfirmpasswordJ
             })
+            console.log(
+                "the success part"+register2
+            );
+            const tokenJ= await register2.generateauthTokenJ();
+            
 
+            res.cookie("jwt",tokenJ,{
+                 expires:new Date(Date.now()+500000),
+                httpOnly:true
+            });
 
             const registered2=await register2.save();
             res.status(201).render('loginJ');
@@ -130,6 +187,8 @@ app.post('/registerJ', async (req,res)=>{
         res.status(404).send(error);
     }
 })
+
+
 
 app.listen(port,()=>{
     console.log(`server is listening on http://localhost:${port}`)
