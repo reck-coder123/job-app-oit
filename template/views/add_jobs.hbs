@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Job Profiles</title>
+    <link rel = "icon" href = 
+"https://st4.depositphotos.com/5040187/19667/v/380/depositphotos_196671168-stock-illustration-logo-swoosh-ellipse-green-letter.jpg?forcejpeg=true" 
+        type = "image/x-icon">
+    {{>header}}
+</head>
+<body>
+    <div class="header" ><h1 >Job Hub</h1></div>
+    <div class="navbar">
+       <nav class="bar">
+        <ul>
+            <li ><a href="/indexA">Back to Home</a></li>
+            <li><a href="#">Job applications</a></li>
+            <li><a href="/loginA">Log out</a></li>
+        </ul></nav>
+    </div><br><br>
+    <div >
+    <form action="/add_jobs" method="post" class="Comm"><br><br>
+        <input type="text" name="job" placeholder="Add Job Profile"></br></br>
+        <textarea name="description" id="message" placeholder="Add description"></textarea>
+        
+        <input type="submit" name="submit" id="btn" value="submit">
+    </form>
+    </div>
+</body>
+</html>
