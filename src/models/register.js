@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mongoose=require('mongoose');
 const jwt =require('jsonwebtoken');
 const bcrypt=require('bcryptjs');
@@ -23,7 +24,13 @@ const schema=new mongoose.Schema({
         type:String,
         required:true,
         unique:true
-    }
+    },
+    tokens:[{
+        token:{
+        type:String,
+        required:true
+        }
+    }]
     
 })
 
@@ -49,21 +56,29 @@ const schema2=new mongoose.Schema({
         type:String,
         required:true,
         unique:true
-    }
+    },
+    tokensJ:[{
+        tokenJ:{
+        type:String,
+        required:true
+        }
+    }]
 })
 schema.pre("save",async function(next){
     // 
     if(this.isModified("passwordA")){
     this.passwordA= await bcrypt.hash(this.passwordA,10)
-    this.ConfirmpasswordA=undefined;
+    this.ConfirmpasswordA=await bcrypt.hash(this.passwordA,10);
 }
     
     next();
 })
 schema.methods.generateauthToken=async function(){
     try {
-        const token =jwt.sign({_id:this._id.toString()},"mynameisayushmishramechanicalengineering");
+        const token =jwt.sign({_id:this._id.toString()},"mynameisayushmishramechanicalengineeringno");
         console.log(token);
+        this.tokens=this.tokens.concat({token:token});
+        await this.save();
         return token;
     } catch (error) {
         res.send('the error part'+error);
@@ -74,16 +89,18 @@ schema.methods.generateauthToken=async function(){
 schema2.pre("save",async function(next){
     if(this.isModified("passwordJ")){
     this.passwordJ= await bcrypt.hash(this.passwordJ,10)
-    this.ConfirmpasswordJ=undefined;
+    this.ConfirmpasswordJ=await bcrypt.hash(this.passwordJ,10);
 }
     
     next();
 })
-schema2.methods.generateauthToken=async function(){
+schema2.methods.generateauthTokenJ=async function(){
     try {
-        const token =jwt.sign({_id:this._id.toString()},"mynameisayushmishramechanicalengineering");
-        console.log(token);
-        return token;
+        const tokenJ =jwt.sign({_id:this._id.toString()},"mynameisayushmishramechanicalengineeringyes");
+        console.log(tokenJ);
+        this.tokensJ=this.tokensJ.concat({tokenJ:tokenJ});
+        await this.save();
+        return tokenJ;
     } catch (error) {
         res.send('the error part'+error);
         console.log('the error part'+error);
