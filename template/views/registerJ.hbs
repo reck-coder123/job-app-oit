@@ -11,9 +11,9 @@
 	{{>header}}
 </head>
 <body>
-	<div><nav>
+	<div><nav class="nav 2">
 			<ul>
-				<li class="nav 2"><a href="/"> Back to Home</a></li>
+				<li><a href="/"> Back to Home</a></li>
 			</ul>
 		</nav></div><br><br><br><br>
     <div align="center">
@@ -29,7 +29,7 @@
 				<h2>Sign up</h2> <h4>for new applicant</h4>
 
 				<form action="/registerJ" method="post">
-					
+					<div id="msg" class="message">{{message}}</div>
 					<input id="nameJ" name="nameJ" type="text" placeholder="Enter Your name" class="textbox" /></br></br>
 					<input id="username" name="username" type="text" placeholder="Enter Your Username"
 						class="textbox" /></br></br>
