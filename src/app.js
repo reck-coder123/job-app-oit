@@ -1,14 +1,17 @@
+require('dotenv').config();
+var id,idJ
 const express=require('express');
 const path=require('path');
 const hbs=require('hbs');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 const cookieparser=require('cookie-parser');
-const {Register,Register2} = require('./models/register');
+const {Register,Register2,Jobs1,Apply1} = require('./models/register');
 const app=express();
 const port=process.env.port|| 5000;
-require('./db/db')
-const auth=require('./middleware/auth');
+const db=require('./db/db')
+const {auth,authJ}=require('./middleware/auth');
+
 
 
 const static_path=path.join(__dirname,'../public/')
@@ -32,9 +35,7 @@ app.get('/loginA',(req,res)=>{
     res.render('loginA');
 })
 
-app.get('/indexA',auth,(req,res)=>{
-    res.render('indexA');
-})
+
 
 app.post('/loginA', async (req,res)=>{
     try {
@@ -50,16 +51,25 @@ app.post('/loginA', async (req,res)=>{
         })
         
        if(isMatch){
+       id =usermail._id.toString();
+       
         res.status(201).render('indexA')
        }
        else{
-        res.send('Invalid account details');
+        res.send('Invalid account details',);
        }
     } catch (error) {
         res.status(400).send(error)
         
     }
+    
 })
+
+app.get('/indexA',auth,async(req,res)=>{
+    const user=await Register.findById(id);
+    res.render('indexA',{user:user});
+})
+
 app.get('/registerA',(req,res)=>{
     res.render('registerA')
 })
@@ -84,9 +94,8 @@ app.post('/registerA', async (req,res)=>{
                 expires:new Date(Date.now()+500000),
                 httpOnly:true
             })
-
             const registered=await register.save();
-            res.status(201).render('loginA');
+            res.status(201).render('registerA',{message:"Registration successfull"});
        }
        else{
         res.send("Passwords are not matching")
@@ -94,10 +103,34 @@ app.post('/registerA', async (req,res)=>{
     } catch (error) {
         res.status(404).send(error);
     }
+    console.log(req.body);
 })
+
+app.get('/profile',async(req,res)=>{
+    const user=await Register.findById(id);
+    res.render('profile',{user:user});
+})
+
 
 app.get('/add_jobs',auth,(req,res)=>{
     res.render('add_jobs');
+})
+
+app.post('/add_jobs',async (req,res)=>{
+    try {
+
+        const add=new Jobs1({
+            job:req.body.job,
+            description:req.body.description,
+            vacancy:req.body.vacancy
+        })
+        console.log(req.body);
+        const added=await add.save();
+            res.status(201).render('add_jobs',{message:"Job profile added successfully!!"});
+
+    } catch (error) {
+       res.status(404).send(error);
+    }
 })
 
 app.get('/logout',auth, async(req,res)=>{
@@ -121,7 +154,7 @@ app.get('/loginJ',(req,res)=>{
     res.render('loginJ')
 })
 
-app.get('/indexJ',(req,res)=>{
+app.get('/indexJ',authJ,(req,res)=>{
     res.render('indexJ');
 })
 
@@ -137,7 +170,7 @@ app.post('/loginJ', async (req,res)=>{
         expires:new Date(Date.now()+500000),
         httpOnly:true
     })
-        
+    idJ =usermailJ._id.toString(); 
        if(isMatch){
         res.status(201).render('indexJ')
        }
@@ -176,19 +209,81 @@ app.post('/registerJ', async (req,res)=>{
                  expires:new Date(Date.now()+500000),
                 httpOnly:true
             });
-
             const registered2=await register2.save();
-            res.status(201).render('loginJ');
+            res.status(201).render('registerJ',{message:"Resgistration successfull!!"});
        }
        else{
-        res.send('Invalid Format');
+        res.render('update',{message:'passwords are not matching'})
        }
     } catch (error) {
         res.status(404).send(error);
     }
 })
 
+app.get('/profileJ',authJ,async(req,res)=>{
+    const userJ= await Register2.findById(idJ);
+res.render('profileJ',{userJ:userJ});
+})
 
+
+app.get('/view_jobs',authJ,async(req,res)=>{
+    Jobs1.find({}, function(err, posts){
+        if(err){
+            console.log(err);
+        }
+        else {
+            res.render('view_jobs',{posts:posts}) 
+        }
+    });
+    
+   
+    
+});
+
+app.post('/view_jobs',authJ, async(req,res)=>{
+
+    try {
+        const apply=new Apply1({
+            Name:req.body.Name,
+            jprofile:req.body.jprofile,
+            phoneno:req.body.phoneno,
+            emailId:req.body.emailId
+        })
+        const added1= await apply.save()
+        res.render('view_jobs',{message:"Applied Successfully!!"})
+    } catch (error) {
+        res.status(401).send(error)
+    }
+    
+})
+
+app.get('/show_applicants',auth, async(req,res)=>{
+    Apply1.find({}, function(err, posts){
+        if(err){
+            console.log(err);
+        }
+        else {
+            res.render('show_applicants',{posts:posts}) 
+        }
+    });
+})
+    
+app.get('/logoutJ',authJ, async(req,res)=>{
+    try {
+
+        req.userJ.tokensJ=req.userJ.tokensJ.filter((current)=>{
+            return current.tokenJ!==req.tokenJ;
+        })
+
+        res.clearCookie("jwt");
+        console.log("logout successfully");
+
+        await req.userJ.save()
+        res.render('loginJ',{message:"Logout Successfull"});
+    } catch (error) {
+        res.status(401).send(error)
+    }
+})
 
 app.listen(port,()=>{
     console.log(`server is listening on http://localhost:${port}`)
