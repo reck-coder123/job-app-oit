@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const mongoose=require('mongoose');
 const jwt =require('jsonwebtoken');
 const bcrypt=require('bcryptjs');
@@ -64,6 +64,45 @@ const schema2=new mongoose.Schema({
         }
     }]
 })
+
+const Jobs=new mongoose.Schema({
+    job:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    description:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    vacancy:{
+        type:Number,
+        required:true
+    }
+})
+
+const Apply=new mongoose.Schema({
+    Name:{
+        type:String,
+        required:true
+    },
+    jprofile:{
+        type:String,
+        required:true
+    },
+    phoneno:{
+        type:Number,
+        required:true,
+        unique:true
+    },
+    emailId:{
+        type:String,
+        required:true,
+        unique:true
+    }
+})
+
 schema.pre("save",async function(next){
     // 
     if(this.isModified("passwordA")){
@@ -76,7 +115,6 @@ schema.pre("save",async function(next){
 schema.methods.generateauthToken=async function(){
     try {
         const token =jwt.sign({_id:this._id.toString()},"mynameisayushmishramechanicalengineeringno");
-        console.log(token);
         this.tokens=this.tokens.concat({token:token});
         await this.save();
         return token;
@@ -109,8 +147,10 @@ schema2.methods.generateauthTokenJ=async function(){
 
 const Register=new mongoose.model('Register',schema)
 const Register2=new mongoose.model('Register2',schema2)
+const Jobs1=new mongoose.model('Addjob',Jobs)
+const Apply1=new mongoose.model('Apply',Apply)
 module.exports={
-    Register,Register2
+    Register,Register2,Jobs1,Apply1
 };
 
 
