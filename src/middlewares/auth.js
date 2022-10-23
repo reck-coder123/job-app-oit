@@ -19,4 +19,22 @@ const auth= async (req,res,next)=>{
     }
 
 }
-module.exports=auth;
+
+const authJ=async(req,res,next)=>{
+    try {
+        const tokenJ=req.cookies.jwt;
+        const verifyuserJ=jwt.verify(tokenJ,"mynameisayushmishramechanicalengineeringyes")
+        console.log(verifyuserJ);
+
+        const userJ=await Register2.findOne({_id:verifyuserJ._id});
+        console.log(userJ);
+    
+        req.tokenJ=tokenJ;
+        req.userJ=userJ;
+        next();
+    } catch (error) {
+        res.status(401).send(error);
+    }
+}
+
+module.exports={auth,authJ};
