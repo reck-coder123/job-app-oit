@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for a Job</title>
+    <link rel = "icon" href = 
+"https://st4.depositphotos.com/5040187/19667/v/380/depositphotos_196671168-stock-illustration-logo-swoosh-ellipse-green-letter.jpg?forcejpeg=true" 
+        type = "image/x-icon">
+    {{>header}}
+</head>
+<body>
+    <div class="header"><h1 id="heading">Job Hub</h1></div>
+    <div class="Bar">
+       <nav>
+        <ul>
+            <li ><a href="/indexJ">Back to Home</a></li>
+            
+            <li><a href="/logoutJ">Log out</a></li>
+        </ul></nav>
+    </div><br><br>
+    <div align="center">
+        <div align="center" class="border">
+
+
+            
+            <h2 class="bottom" style="text-align: centre;">
+                Apply For Jobs
+            </h2></br>
+            <div class="border">
+                <table class="worddark" style="border: solid 6px ;"></br></br></br></br>
+                    <tr>
+                        <th id="c3">Job Profile</th>
+                        <th id="c4">Job description</th>
+                        <th id="c5">Vacancy</th>
+                        
+                    </tr>
+                    {{#each posts}}
+                    <tr>
+                        
+                        <td id="c1"> {{this.job}}</td>
+                        <td id="c2"> {{this.description}}</td>
+                        <td id="c6">{{this.vacancy}}</td>
+                        
+                    </tr>
+                     {{/each}} 
+                </table><br><br><br><br>
+                <h2 class="bottom" style="text-align: centre;">
+                    Apply For Jobs
+                </h2></br>
+                <form action="/view_jobs" method="post">
+                    <div>{{message}}</div>
+                    <input type="text" name="Name" placeholder="Enter your Name"></br></br>
+                    <input type="text" name="jprofile" placeholder="Enter Job Profile"></br></br>
+                    <input type="number" name="phoneno" placeholder="Contact Number"></br></br>
+                    <input type="text" name="emailId" placeholder="Enter your Email Id"></br></br>
+                    <input type="submit" class="btn" value="Apply"></br></br>
+                </form>
+            </div>
+        </div>
+</body>
+</html>
