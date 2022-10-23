@@ -9,12 +9,21 @@ body{
     padding: 2px;
     font-family: sans-serif;
 }
+
 nav ul li a{
-    float: right;
+    position: relative;
+    left: 0%;
+    float: left;
     font-family: sans-serif;
     color: black;
 }
 
+.nav2 ul li a:hover{
+    margin: auto;
+    background-color:rgb(57, 124, 84);
+    color:white;
+    transition: 1s;
+}
 .big{
     width: 100%;
     min-height: 100vh;
